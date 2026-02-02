@@ -79,7 +79,8 @@ noButton.addEventListener('mouseenter', () => {
 let lastMoveTime = 0;
 const moveDelay = 150; // Milliseconds between moves
 
-document.addEventListener('mousemove', (e) => {
+// Function to check distance and move button
+function checkDistanceAndMove(clientX, clientY) {
     if (!questionScreenActive) return;
 
     const currentTime = Date.now();
@@ -88,24 +89,35 @@ document.addEventListener('mousemove', (e) => {
     }
 
     const buttonRect = noButton.getBoundingClientRect();
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
 
-    // Calculate distance from mouse to button center
+    // Calculate distance from pointer to button center
     const buttonCenterX = buttonRect.left + buttonRect.width / 2;
     const buttonCenterY = buttonRect.top + buttonRect.height / 2;
 
     const distance = Math.sqrt(
-        Math.pow(mouseX - buttonCenterX, 2) +
-        Math.pow(mouseY - buttonCenterY, 2)
+        Math.pow(clientX - buttonCenterX, 2) +
+        Math.pow(clientY - buttonCenterY, 2)
     );
 
-    // If mouse is within 120px of the button, move it away
+    // If pointer is within 120px of the button, move it away
     if (distance < 120) {
         moveNoButton();
         lastMoveTime = currentTime;
     }
+}
+
+// Mouse support for desktop
+document.addEventListener('mousemove', (e) => {
+    checkDistanceAndMove(e.clientX, e.clientY);
 });
+
+// Touch support for mobile/iPhone
+document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        checkDistanceAndMove(touch.clientX, touch.clientY);
+    }
+}, { passive: true });
 
 // Handle yes button click
 yesButton.addEventListener('click', () => {
