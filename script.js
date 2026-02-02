@@ -49,7 +49,7 @@ function initializeNoButton() {
     const noButtonX = (containerWidth - noButtonWidth) / 2;
 
     // Position 70px from top to be very close below the yes button
-    const noButtonY = 70;
+    const noButtonY = 150;
 
     noButton.style.transition = 'none';
     noButton.style.left = `${noButtonX}px`;
